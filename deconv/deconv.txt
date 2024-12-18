@@ -1,0 +1,40 @@
+#
+# conv.txt
+#
+
+cd /mnt/volume/akari/ana/specdcv
+
+
+img_spec=trim_ng/specimage_trim.fits
+img_ref=trim_ng/refimage_trim.fits
+img_psf=trim_ng/refimage_psf_trim.fits
+spec_resp_dat=response_NG_1st_P2.dat
+point_src_dat=point_src.txt
+outdir=resp_point_ng
+outfile_head=temp
+
+
+data_file=trim_ng/specimage_trim.fits
+resp_file=resp_point_ng/temp_resp.fits
+nskys=2
+nskyz=291
+ndetx=31
+ndety=321
+nem=10000
+tol_em=1.0e-10
+acc_method=none
+outdir=deconv_ng
+outfile_head=temp
+
+/home/morii/work/github/moriiism/specdcv/deconv/deconv \
+$data_file \
+$resp_file \
+$nskys \
+$nskyz \
+$ndetx \
+$ndety \
+$nem \
+$tol_em \
+$acc_method \
+$outdir \
+$outfile_head
