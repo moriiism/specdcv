@@ -18,7 +18,7 @@ void ArgValMkrespPointNg::Init(int argc, char* argv[])
     SetOption(argc, argv, long_options);
     
     printf("ArgVal::Init: # of arg = %d\n", argc - optind);
-    int narg = 7;
+    int narg = 8;
     if (argc - optind != narg){
         printf("# of arguments must be %d.\n", narg);
         Usage(stdout);
@@ -29,6 +29,7 @@ void ArgValMkrespPointNg::Init(int argc, char* argv[])
     spec_resp_dat_  = argv[iarg]; iarg++;
     point_src_dat_  = argv[iarg]; iarg++;
     plus_minus_for_delta_pix_ = argv[iarg]; iarg++;
+    npix_x_jitter_  = atoi(argv[iarg]); iarg++;
     outdir_         = argv[iarg]; iarg++;
     outfile_head_   = argv[iarg]; iarg++;
 }
@@ -45,6 +46,7 @@ void ArgValMkrespPointNg::Print(FILE* fp) const
     fprintf(fp, "%s: spec_resp_dat_  : %s\n", __func__, spec_resp_dat_.c_str());
     fprintf(fp, "%s: point_src_dat_  : %s\n", __func__, point_src_dat_.c_str());
     fprintf(fp, "%s: plus_minus_for_delta_pix_ : %s\n", __func__, plus_minus_for_delta_pix_.c_str());
+    fprintf(fp, "%s: npix_x_jitter   : %d\n", __func__, npix_x_jitter_);
     fprintf(fp, "%s: outdir_         : %s\n", __func__, outdir_.c_str());
     fprintf(fp, "%s: outfile_head_   : %s\n", __func__, outfile_head_.c_str());
 }
@@ -59,6 +61,7 @@ void ArgValMkrespPointNg::Null()
     spec_resp_dat_ = "";
     point_src_dat_ = "";
     plus_minus_for_delta_pix_ = "";
+    npix_x_jitter_;
     outdir_   = "";
     outfile_head_ = "";
 }
@@ -118,7 +121,7 @@ void ArgValMkrespPointNg::Usage(FILE* fp) const
     fprintf(fp,
             "usage: %s [--help (0)] [--verbose (0)] [--debug (0)] "
             "img_spec  img_psf  spec_resp_dat  point_src_dat  plus_minus_for_delta_pix  "
-            "outdir  outfile_head\n",
+            "npix_x_jitter  outdir  outfile_head\n",
             progname_.c_str());
     abort();
 }

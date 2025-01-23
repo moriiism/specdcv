@@ -195,8 +195,10 @@ int main(int argc, char* argv[])
             //   ipsfy - pos0y_psf = idety - posy_src
             // Therefore, if the effect of image shift toward y-direction by grism
             // is considered, indices becomes the followings:
-            //   ipsfx = pos0x_psf + idetx - posx_src
             //   ipsfy = pos0y_psf + idety - posy_src - delta_pix_arr[iskyz]
+            // Therefore, if the effect of image shift toward x-direction by jitter
+            // is considered, indices becomes the followings:
+            //   ipsfx = pos0x_psf + idetx - posx_src - npix_x_jitter
             double* img_det_arr = new double[ndet];
             for(int idet = 0; idet < ndet; idet ++){
                 img_det_arr[idet] = 1.0e-20;
@@ -207,10 +209,8 @@ int main(int argc, char* argv[])
                     continue;
                 }
                 for(int idetx = 0; idetx < ndetx; idetx ++){
-
-                    // debug
-                    // int ipsfx = pos0x_psf + idetx - posx_src;
-                    int ipsfx = pos0x_psf + idetx - posx_src - (15 - 9);
+                    // npix_x_jitter = (15 - 9)
+                    int ipsfx = pos0x_psf + idetx - posx_src - argval->GetNpixXJitter();
                     if(ipsfx < 0 || npixx_psf - 1 < ipsfx){
                         continue;
                     }

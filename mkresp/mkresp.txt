@@ -209,6 +209,7 @@ img_psf=trim_ng/refimage_psf_trim.fits
 spec_resp_dat=response_NG_1st_P2.dat
 point_src_dat=point_src.txt
 plus_minus_for_delta_pix="plus"
+npix_x_jitter=6
 outdir=resp_point_ng
 outfile_head=point_ng
 
@@ -218,6 +219,7 @@ $img_psf \
 $spec_resp_dat \
 $point_src_dat \
 $plus_minus_for_delta_pix \
+$npix_x_jitter \
 $outdir \
 $outfile_head
 

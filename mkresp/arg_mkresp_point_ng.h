@@ -13,6 +13,7 @@ public:
         spec_resp_dat_(""),
         point_src_dat_(""),
         plus_minus_for_delta_pix_(""),
+        npix_x_jitter_(0),
         outdir_(""),
         outfile_head_("") {}
     ~ArgValMkrespPointNg(){
@@ -27,6 +28,7 @@ public:
     string GetSpecRespDat() const {return spec_resp_dat_;};
     string GetPointSrcDat() const {return point_src_dat_;};
     string GetPlusMinusForDeltaPix() const {return plus_minus_for_delta_pix_;};
+    int GetNpixXJitter() const {return npix_x_jitter_;};
     string GetOutdir() const {return outdir_;};
     string GetOutfileHead() const {return outfile_head_;};
 
@@ -37,6 +39,7 @@ private:
     string spec_resp_dat_;
     string point_src_dat_;
     string plus_minus_for_delta_pix_;
+    int npix_x_jitter_;
     string outdir_;
     string outfile_head_;
 
