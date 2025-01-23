@@ -10,10 +10,11 @@ public:
         progname_(""),
         data_file_(""),
         resp_file_(""),
-        nskys_(0),
         nskyz_(0),
+        nskys_(0),
         ndetx_(0),
         ndety_(0),
+        ratio_ele_to_adu_(0.0),
         nem_(0),
         tol_em_(0.0),
         acc_method_(""),
@@ -28,10 +29,11 @@ public:
     string GetProgname() const {return progname_;};
     string GetDataFile() const {return data_file_;};
     string GetRespFile() const {return resp_file_;};
+    int GetNskyz() const {return nskyz_;};    
     int GetNskys() const {return nskys_;};
-    int GetNskyz() const {return nskyz_;};
     int GetNdetx() const {return ndetx_;};
     int GetNdety() const {return ndety_;};
+    double GetRatioEleToAdu() const {return ratio_ele_to_adu_;};
     int GetNem() const {return nem_;};
     double GetTolEm() const {return tol_em_;};
     string GetAccMethod() const {return acc_method_;};
@@ -42,10 +44,11 @@ private:
     string progname_;
     string data_file_;
     string resp_file_;
+    int nskyz_;    
     int nskys_;
-    int nskyz_;
     int ndetx_;
     int ndety_;
+    double ratio_ele_to_adu_;
     int    nem_;
     double tol_em_;
     string acc_method_;

@@ -26,8 +26,8 @@ void ArgValConv::Init(int argc, char* argv[])
     int iarg = optind;
     sky_file_       = argv[iarg]; iarg++;
     resp_file_      = argv[iarg]; iarg++;
+    nskyz_          = atoi(argv[iarg]); iarg++;    
     nskys_          = atoi(argv[iarg]); iarg++;
-    nskyz_          = atoi(argv[iarg]); iarg++;
     ndetx_          = atoi(argv[iarg]); iarg++;
     ndety_          = atoi(argv[iarg]); iarg++;    
     outdir_         = argv[iarg]; iarg++;
@@ -43,8 +43,8 @@ void ArgValConv::Print(FILE* fp) const
     fprintf(fp, "%s: progname_       : %s\n", __func__, progname_.c_str());
     fprintf(fp, "%s: sky_file_       : %s\n", __func__, sky_file_.c_str());
     fprintf(fp, "%s: resp_file_      : %s\n", __func__, resp_file_.c_str());
+    fprintf(fp, "%s: nskyz_          : %d\n", __func__, nskyz_);    
     fprintf(fp, "%s: nskys_          : %d\n", __func__, nskys_);
-    fprintf(fp, "%s: nskyz_          : %d\n", __func__, nskyz_);
     fprintf(fp, "%s: ndetx_          : %d\n", __func__, ndetx_);
     fprintf(fp, "%s: ndety_          : %d\n", __func__, ndety_);    
     fprintf(fp, "%s: outdir_         : %s\n", __func__, outdir_.c_str());
@@ -58,8 +58,8 @@ void ArgValConv::Null()
     progname_ = "";
     sky_file_ = "";
     resp_file_ = "";
+    nskyz_ = 0;    
     nskys_ = 0;
-    nskyz_ = 0;
     ndetx_ = 0;
     ndety_ = 0;
     outdir_    = "";
@@ -120,7 +120,7 @@ void ArgValConv::Usage(FILE* fp) const
 {
     fprintf(fp,
             "usage: %s [--help (0)] [--verbose (0)] [--debug (0)] "
-            "sky_file  resp_file  nskys nskyz ndetx ndety "
+            "sky_file  resp_file  skyz  nskys  ndetx  ndety  "
             "outdir  outfile_head \n",
             progname_.c_str());
     abort();

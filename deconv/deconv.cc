@@ -38,12 +38,12 @@ int main(int argc, char* argv[])
     argval->Print(fp_log);
     MiIolib::Printf2(fp_log, "-----------------------------\n");    
 
-    int nskys = argval->GetNskys();
     int nskyz = argval->GetNskyz();
+    int nskys = argval->GetNskys();
     int ndetx = argval->GetNdetx();
     int ndety = argval->GetNdety();
-    int nsky = nskys * nskyz;
-    int ndet = ndetx * ndety;    
+    int nsky = nskyz * nskys;
+    int ndet = ndetx * ndety;
 
     // load data
     MifImgInfo* img_info_data = new MifImgInfo;
@@ -54,6 +54,17 @@ int main(int argc, char* argv[])
                           &bitpix_data, &data_arr);
     int nph_data = MirMath::GetSum(ndet, data_arr);
     MiIolib::Printf2(fp_log, "N photon = %d\n", nph_data);
+
+    // add offset for data to be positive.
+    double data_min = MirMath::GetMin(ndet, data_arr);
+    printf("data_min = %e\n", data_min);
+    for(int idet = 0; idet < ndet; idet ++){
+        data_arr[idet] -= data_min;
+    }
+    // adu --> electron
+    for(int idet = 0; idet < ndet; idet ++){
+        data_arr[idet] *= argval->GetRatioEleToAdu();
+    }
 
     // load bg model data
     double* bg_arr = NULL;
@@ -146,14 +157,34 @@ int main(int argc, char* argv[])
     //}
     
     long naxes[2];
-    naxes[0] = nskys;
-    naxes[1] = nskyz;
+    naxes[0] = nskyz;
+    naxes[1] = nskys;
     int bitpix_out = -32;
     MifFits::OutFitsImageD(argval->GetOutdir(),
                            argval->GetOutfileHead(),
                            "rec", 2,
                            bitpix_out,
                            naxes, sky_new_arr);
+
+
+    // output spectrum to qdp
+    char qdpout[kLineSize];
+    sprintf(qdpout, "%s/spec_%s.qdp", argval->GetOutdir().c_str(),
+            argval->GetOutfileHead().c_str());
+    FILE* fp_qdp = fopen(qdpout, "w");
+    fprintf(fp_qdp, "skip sing \n");
+    fprintf(fp_qdp, "\n");
+    for(int iskys = 0; iskys < nskys; iskys ++){
+        for(int iskyz = 0; iskyz < nskyz; iskyz ++){    
+            int isky = iskyz + nskyz * iskys;
+            fprintf(fp_qdp, "%d %e\n", iskyz, sky_new_arr[isky]);
+        }
+        fprintf(fp_qdp, "\n");
+        fprintf(fp_qdp, "no\n");
+        fprintf(fp_qdp, "\n");
+    }
+    fprintf(fp_qdp, "\n");
+    fclose(fp_qdp);
 
     double time_ed = MiTime::GetTimeSec();
     MiIolib::Printf2(fp_log,

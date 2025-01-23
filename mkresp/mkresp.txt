@@ -116,20 +116,17 @@ ln -s /mnt/volume/akari/data/spectrum/AKARI_IRC_1600060_001/1600060.1/irc_specre
 --> 1600060.1.N3_NG.refimage_bg.fits
 --> 1600060.1.N3_NG.specimage_bg.fits
 
-/home/morii/work/github/moriiism/specdcv/trim/trim \
-$in_img \
-$x_lo \
-$x_up \
-$y_lo \
-$y_up \
-$outdir \
-$outfile_head
+
+ds9 ~/Documents/docker/volume/ubuntu/akari/data/spectrum/AKARI_IRC_1600060_001/1600060.1/irc_specred_out/1600060.1.N3_NG.specimage_bg.fits \
+~/Documents/docker/volume/ubuntu/akari/data/spectrum/AKARI_IRC_1600060_001/1600060.1/irc_specred_out/1600060.1.N3_NG.refimage_bg.fits &
+
+
 
 ## trim spec image and convert cube to image
 in_img=1600060.1.N3_NG.specimage_bg.fits
 x_lo=310
 x_up=340
-y_lo=0
+y_lo=5
 y_up=320
 outdir=trim_ng
 outfile_head=specimage
@@ -147,7 +144,7 @@ $outfile_head
 in_img=1600060.1.N3_NG.refimage_bg.fits
 x_lo=310
 x_up=340
-y_lo=0
+y_lo=5
 y_up=320
 outdir=trim_ng
 outfile_head=refimage
@@ -199,24 +196,24 @@ ln -s /mnt/volume/akari/IRC_SPEC_TOOLKIT/IRC_SPEC_TOOLKIT_P12.20181203/ASTRO-F/I
 # point source positions
 cat << EOF > point_src.txt
 # x y
-9 235
-13 164
+9 230
+13 159
 EOF
 
 
 # mkresp
+# img_ref=trim_ng/refimage_trim.fits
+
 img_spec=trim_ng/specimage_trim.fits
-img_ref=trim_ng/refimage_trim.fits
 img_psf=trim_ng/refimage_psf_trim.fits
 spec_resp_dat=response_NG_1st_P2.dat
 point_src_dat=point_src.txt
 plus_minus_for_delta_pix="plus"
 outdir=resp_point_ng
-outfile_head=temp
+outfile_head=point_ng
 
 /home/morii/work/github/moriiism/specdcv/mkresp/mkresp_point_ng \
 $img_spec \
-$img_ref \
 $img_psf \
 $spec_resp_dat \
 $point_src_dat \
@@ -225,4 +222,4 @@ $outdir \
 $outfile_head
 
 
---> /mnt/volume/akari/ana/specdcv/resp_point_ng/temp_resp.fits
+--> /mnt/volume/akari/ana/specdcv/resp_point_ng/point_ng_resp.fits

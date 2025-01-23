@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     FILE* fp_log = fopen(logfile, "w");
     MiIolib::Printf2(fp_log, "-----------------------------\n");
     argval->Print(fp_log);
-
+    
     int naxis_psf = MifFits::GetNaxis(argval->GetImgPsf());
     int naxis_spec = MifFits::GetNaxis(argval->GetImgSpec());
     MiIolib::Printf2(fp_log, "naxis_psf = %d\n", naxis_psf);
@@ -75,7 +75,6 @@ int main(int argc, char* argv[])
                      posx_psf, posy_psf);
     MiIolib::Printf2(fp_log, "where, posx_psf is in [1, npixx_psf], "
                      "posy_psf is in [1, npixy_psf].\n");
-
    
     // get 2-d image of detector
     MifImgInfo* img_info_spec = new MifImgInfo;
@@ -105,11 +104,10 @@ int main(int argc, char* argv[])
     }
     MiIolib::DelReadFile(lines_arr);
 
+    printf("point_src dat:\n");
+    printf("posx_src0: %e %e\n", posx_src_arr[0], posy_src_arr[0]);
+    printf("posx_src1: %e %e\n", posx_src_arr[1], posy_src_arr[1]);
 
-    printf("%e %e\n", posx_src_arr[0], posy_src_arr[0]);
-    printf("%e %e\n", posx_src_arr[1], posy_src_arr[1]);
-
-    
     // read spec_resp_dat
     MiIolib::GenReadFileSkipComment(argval->GetSpecRespDat(),
                                     &lines_arr,
@@ -158,13 +156,13 @@ int main(int argc, char* argv[])
     }
     
     int nskys = nsrc;
-    int nsky = nskys * nskyz;
+    int nsky = nskyz * nskys;
     int ndetx = npixx_spec;
     int ndety = npixy_spec;
     int ndet = ndetx * ndety;
 
+    MiIolib::Printf2(fp_log, "nskyz = %d\n", nskyz);    
     MiIolib::Printf2(fp_log, "nskys = %d\n", nskys);
-    MiIolib::Printf2(fp_log, "nskyz = %d\n", nskyz);
     MiIolib::Printf2(fp_log, "nsky  = %d\n", nsky);
     MiIolib::Printf2(fp_log, "ndetx = %d\n", ndetx);
     MiIolib::Printf2(fp_log, "ndety = %d\n", ndety);
@@ -209,7 +207,10 @@ int main(int argc, char* argv[])
                     continue;
                 }
                 for(int idetx = 0; idetx < ndetx; idetx ++){
-                    int ipsfx = pos0x_psf + idetx - posx_src;
+
+                    // debug
+                    // int ipsfx = pos0x_psf + idetx - posx_src;
+                    int ipsfx = pos0x_psf + idetx - posx_src - (15 - 9);
                     if(ipsfx < 0 || npixx_psf - 1 < ipsfx){
                         continue;
                     }
@@ -259,8 +260,8 @@ int main(int argc, char* argv[])
     // efficiency 
     int naxis_eff = 2;
     long* naxes_eff = new long[naxis_eff];
-    naxes_eff[0] = nskys;
-    naxes_eff[1] = nskyz;
+    naxes_eff[0] = nskyz;
+    naxes_eff[1] = nskys;
     MifFits::OutFitsImageD(argval->GetOutdir(),
                            argval->GetOutfileHead(),
                            "eff", naxis_eff, bitpix_spec,

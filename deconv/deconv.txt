@@ -1,5 +1,5 @@
 #
-# conv.txt
+# deconv.txt
 #
 
 cd /mnt/volume/akari/ana/specdcv
@@ -11,30 +11,68 @@ img_psf=trim_ng/refimage_psf_trim.fits
 spec_resp_dat=response_NG_1st_P2.dat
 point_src_dat=point_src.txt
 outdir=resp_point_ng
-outfile_head=temp
+outfile_head=point_ng
 
 
 data_file=trim_ng/specimage_trim.fits
-resp_file=resp_point_ng/temp_resp.fits
-nskys=2
+resp_file=resp_point_ng/point_ng_resp.fits
 nskyz=291
+nskys=2
 ndetx=31
-ndety=321
-nem=10000
-tol_em=1.0e-10
+ndety=316
+ratio_ele_to_adu=10.0
+nem=1000
+tol_em=1.0e-5
 acc_method=none
 outdir=deconv_ng
-outfile_head=temp
+outfile_head=point_ng
 
 /home/morii/work/github/moriiism/specdcv/deconv/deconv \
 $data_file \
 $resp_file \
-$nskys \
 $nskyz \
+$nskys \
 $ndetx \
 $ndety \
+$ratio_ele_to_adu \
 $nem \
 $tol_em \
 $acc_method \
 $outdir \
 $outfile_head
+
+
+-------------------------
+
+# convolve
+
+sky_file=deconv_ng/point_ng_rec.fits
+resp_file=resp_point_ng/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+outdir=conv_ng
+outfile_head=deconv_conv
+
+/home/morii/work/github/moriiism/specdcv/conv/conv \
+$sky_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$outdir \
+$outfile_head
+
+
+
+int nsky = nskyz * nskys;
+int ndet = ndetx * ndety;
+int isky = iskyz + nskyz * iskys;
+
+
+cd Documents/docker/volume/ubuntu/akari/ana/specdcv
+ds9 trim_ng/specimage_trim.fits \
+   conv_ng/deconv_conv_conv.fits \
+   conv_ng/deconv_conv_conv_debug1.fits &

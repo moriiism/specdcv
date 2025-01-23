@@ -9,7 +9,6 @@ public:
         MiArgBase(),
         progname_(""),
         img_spec_(""),
-        img_ref_(""),
         img_psf_(""),
         spec_resp_dat_(""),
         point_src_dat_(""),
@@ -24,7 +23,6 @@ public:
 
     string GetProgname() const {return progname_;};
     string GetImgSpec() const {return img_spec_;};
-    string GetImgRef() const {return img_ref_;};
     string GetImgPsf() const {return img_psf_;};
     string GetSpecRespDat() const {return spec_resp_dat_;};
     string GetPointSrcDat() const {return point_src_dat_;};
@@ -35,7 +33,6 @@ public:
 private:
     string progname_;
     string img_spec_;
-    string img_ref_;
     string img_psf_;
     string spec_resp_dat_;
     string point_src_dat_;

@@ -36,39 +36,36 @@ int main(int argc, char* argv[])
 
 
     // image data size
-    //int nskys = MifFits::GetAxisSize(argval->GetSkyFile(), 0); 
-    //int nskyz = MifFits::GetAxisSize(argval->GetSkyFile(), 1);
+    //int nskyz = MifFits::GetAxisSize(argval->GetSkyFile(), 0);
+    //int nskys = MifFits::GetAxisSize(argval->GetSkyFile(), 1); 
 
+    int nskyz = argval->GetNskyz();    
     int nskys = argval->GetNskys();
-    int nskyz = argval->GetNskyz();
     int ndetx = argval->GetNdetx();
     int ndety = argval->GetNdety();        
-    int nsky = nskys * nskyz;
+    int nsky = nskyz * nskys;
     int ndet = ndetx * ndety;
     
-//    // load sky 
-//    double* sky_arr = NULL;
-//    double sum_sky = 0.0;
-//    MifImgInfo* img_info_sky = new MifImgInfo;
-//    img_info_sky->InitSetImg(1, 1, nskys, nskyz);
-//    int bitpix_sky = 0;
-//    MifFits::InFitsImageD(argval->GetSkyFile(), img_info_sky,
-//                          &bitpix_sky, &sky_arr);
-//    sum_sky = MirMath::GetSum(nsky, sky_arr);
-//    MiIolib::Printf2(fp_log, "sum_sky = %e\n", sum_sky);
+    // load sky 
+    double* sky_arr = NULL;
+    double sum_sky = 0.0;
+    MifImgInfo* img_info_sky = new MifImgInfo;
+    img_info_sky->InitSetImg(1, 1, nskyz, nskys);
+    int bitpix_sky = 0;
+    MifFits::InFitsImageD(argval->GetSkyFile(), img_info_sky,
+                          &bitpix_sky, &sky_arr);
+    sum_sky = MirMath::GetSum(nsky, sky_arr);
+    MiIolib::Printf2(fp_log, "sum_sky = %e\n", sum_sky);
 
-
-    double* sky_arr = new double[nsky];
-    for(int iskys = 0; iskys < nskys; iskys ++){
-        for(int iskyz = 0; iskyz < nskyz; iskyz ++){
-            int isky = iskyz + nskyz * iskys;
-            sky_arr[isky] = 1.0;
-        }
-    }
-
-    
-
-    
+    // debug
+    // double* sky_arr = new double[nsky];
+    //for(int iskyz = 0; iskyz < nskyz; iskyz ++){    
+    //    for(int iskys = 0; iskys < nskys; iskys ++){
+    //        int isky = iskyz + nskyz * iskys;
+    //        sky_arr[isky] = 1.0;
+    //    }
+    //}
+        
     // load response file
     int naxis0 = MifFits::GetAxisSize(argval->GetRespFile(), 0);
     int naxis1 = MifFits::GetAxisSize(argval->GetRespFile(), 1);
