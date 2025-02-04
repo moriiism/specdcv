@@ -147,7 +147,11 @@ int main(int argc, char* argv[])
         printf("bad acc_method\n");
         abort();
     }
-    
+
+    // div by ratio_ele_to_adu
+    for(int isky = 0; isky < nsky; isky ++){
+        sky_new_arr[isky] /= argval->GetRatioEleToAdu();
+    }
     double sum_sky_new = MirMath::GetSum(nsky, sky_new_arr);
     MiIolib::Printf2(fp_log, "sum_sky_new = %e\n", sum_sky_new);
 
@@ -155,7 +159,7 @@ int main(int argc, char* argv[])
     //for(int isky = 0; isky < nsky; isky ++){
     //    sky_new_arr[isky] /= eff_mat_arr[isky];
     //}
-    
+
     long naxes[2];
     naxes[0] = nskyz;
     naxes[1] = nskys;
@@ -166,7 +170,22 @@ int main(int argc, char* argv[])
                            bitpix_out,
                            naxes, sky_new_arr);
 
-
+    // load skyz vs lambda data
+    long nline = 0;
+    string* line_arr = NULL;
+    MiIolib::GenReadFileSkipComment(argval->GetSkyzLambdaFile(),
+                                    &line_arr,
+                                    &nline);
+    double* lambda_arr = new double[nline];
+    for(int iline = 0; iline < nline; iline ++){
+        int nsplit = 0;
+        string* split_arr = NULL;
+        MiStr::GenSplit(line_arr[iline], &nsplit, &split_arr);
+        lambda_arr[iline] = atof(split_arr[2].c_str());
+        delete [] split_arr;
+    }
+    MiIolib::DelReadFile(line_arr);
+    
     // output spectrum to qdp
     char qdpout[kLineSize];
     sprintf(qdpout, "%s/spec_%s.qdp", argval->GetOutdir().c_str(),
@@ -177,15 +196,27 @@ int main(int argc, char* argv[])
     for(int iskys = 0; iskys < nskys; iskys ++){
         for(int iskyz = 0; iskyz < nskyz; iskyz ++){    
             int isky = iskyz + nskyz * iskys;
-            fprintf(fp_qdp, "%d %e\n", iskyz, sky_new_arr[isky]);
+            fprintf(fp_qdp, "%e  %e  !  %d\n", lambda_arr[iskyz], sky_new_arr[isky], iskyz);
         }
         fprintf(fp_qdp, "\n");
         fprintf(fp_qdp, "no\n");
         fprintf(fp_qdp, "\n");
     }
     fprintf(fp_qdp, "\n");
-    fclose(fp_qdp);
 
+    fprintf(fp_qdp, "time off\n");
+    fprintf(fp_qdp, "la file\n");
+    fprintf(fp_qdp, "lw 5\n");
+    fprintf(fp_qdp, "p v\n");
+    fprintf(fp_qdp, "la rot\n");
+    fprintf(fp_qdp, "win 1\n");
+    fprintf(fp_qdp, "la y Jy\n");
+    fprintf(fp_qdp, "win 2\n");
+    fprintf(fp_qdp, "la y Jy\n");
+    fprintf(fp_qdp, "la x lambda (um)\n");
+    fclose(fp_qdp);
+    delete [] lambda_arr;
+    
     double time_ed = MiTime::GetTimeSec();
     MiIolib::Printf2(fp_log,
                      "duration = %e sec.\n", time_ed - time_st);

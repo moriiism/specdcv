@@ -10,6 +10,7 @@ public:
         progname_(""),
         data_file_(""),
         resp_file_(""),
+        skyz_lambda_file_(""),
         nskyz_(0),
         nskys_(0),
         ndetx_(0),
@@ -29,6 +30,7 @@ public:
     string GetProgname() const {return progname_;};
     string GetDataFile() const {return data_file_;};
     string GetRespFile() const {return resp_file_;};
+    string GetSkyzLambdaFile() const {return skyz_lambda_file_;};
     int GetNskyz() const {return nskyz_;};    
     int GetNskys() const {return nskys_;};
     int GetNdetx() const {return ndetx_;};
@@ -44,7 +46,8 @@ private:
     string progname_;
     string data_file_;
     string resp_file_;
-    int nskyz_;    
+    string skyz_lambda_file_;
+    int nskyz_;
     int nskys_;
     int ndetx_;
     int ndety_;

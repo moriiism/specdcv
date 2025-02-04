@@ -16,6 +16,7 @@ outfile_head=point_ng
 
 data_file=trim_ng/specimage_trim.fits
 resp_file=resp_point_ng/point_ng_resp.fits
+skyz_lambda_file=resp_point_ng/point_ng_skyz_lambda.dat
 nskyz=291
 nskys=2
 ndetx=31
@@ -30,6 +31,7 @@ outfile_head=point_ng
 /home/morii/work/github/moriiism/specdcv/deconv/deconv \
 $data_file \
 $resp_file \
+$skyz_lambda_file \
 $nskyz \
 $nskys \
 $ndetx \
@@ -76,3 +78,351 @@ cd Documents/docker/volume/ubuntu/akari/ana/specdcv
 ds9 trim_ng/specimage_trim.fits \
    conv_ng/deconv_conv_conv.fits \
    conv_ng/deconv_conv_conv_debug1.fits &
+
+
+ds9 trim_ng/specimage_trim.fits \
+   conv_ng/deconv_conv_conv.fits &
+   
+
+
+
+
+#
+# change gitter
+#
+
+
+# x+8
+
+# deconv
+
+data_file=trim_ng/specimage_trim.fits
+resp_file=resp_point_ng_x+8pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+ratio_ele_to_adu=10.0
+nem=1000
+tol_em=1.0e-5
+acc_method=none
+outdir=deconv_ng_x+8pix
+outfile_head=point_ng
+
+/home/morii/work/github/moriiism/specdcv/deconv/deconv \
+$data_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$ratio_ele_to_adu \
+$nem \
+$tol_em \
+$acc_method \
+$outdir \
+$outfile_head
+
+# convolve
+
+sky_file=deconv_ng_x+8pix/point_ng_rec.fits
+resp_file=resp_point_ng_x+8pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+outdir=conv_ng_x+8pix
+outfile_head=deconv_conv
+
+/home/morii/work/github/moriiism/specdcv/conv/conv \
+$sky_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$outdir \
+$outfile_head
+
+---------------------------------------
+# x+7
+
+# deconv
+
+data_file=trim_ng/specimage_trim.fits
+resp_file=resp_point_ng_x+7pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+ratio_ele_to_adu=10.0
+nem=1000
+tol_em=1.0e-5
+acc_method=none
+outdir=deconv_ng_x+7pix
+outfile_head=point_ng
+
+/home/morii/work/github/moriiism/specdcv/deconv/deconv \
+$data_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$ratio_ele_to_adu \
+$nem \
+$tol_em \
+$acc_method \
+$outdir \
+$outfile_head
+
+# convolve
+
+sky_file=deconv_ng_x+7pix/point_ng_rec.fits
+resp_file=resp_point_ng_x+7pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+outdir=conv_ng_x+7pix
+outfile_head=deconv_conv
+
+/home/morii/work/github/moriiism/specdcv/conv/conv \
+$sky_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$outdir \
+$outfile_head
+
+
+---------------------------------------
+# x+6
+
+# deconv
+
+data_file=trim_ng/specimage_trim.fits
+resp_file=resp_point_ng_x+6pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+ratio_ele_to_adu=10.0
+nem=1000
+tol_em=1.0e-5
+acc_method=none
+outdir=deconv_ng_x+6pix
+outfile_head=point_ng
+
+/home/morii/work/github/moriiism/specdcv/deconv/deconv \
+$data_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$ratio_ele_to_adu \
+$nem \
+$tol_em \
+$acc_method \
+$outdir \
+$outfile_head
+
+# convolve
+
+sky_file=deconv_ng_x+6pix/point_ng_rec.fits
+resp_file=resp_point_ng_x+6pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+outdir=conv_ng_x+6pix
+outfile_head=deconv_conv
+
+/home/morii/work/github/moriiism/specdcv/conv/conv \
+$sky_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$outdir \
+$outfile_head
+
+
+
+---------------------------------------
+# x+5
+
+# deconv
+
+data_file=trim_ng/specimage_trim.fits
+resp_file=resp_point_ng_x+5pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+ratio_ele_to_adu=10.0
+nem=1000
+tol_em=1.0e-5
+acc_method=none
+outdir=deconv_ng_x+5pix
+outfile_head=point_ng
+
+/home/morii/work/github/moriiism/specdcv/deconv/deconv \
+$data_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$ratio_ele_to_adu \
+$nem \
+$tol_em \
+$acc_method \
+$outdir \
+$outfile_head
+
+# convolve
+
+sky_file=deconv_ng_x+5pix/point_ng_rec.fits
+resp_file=resp_point_ng_x+5pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+outdir=conv_ng_x+5pix
+outfile_head=deconv_conv
+
+/home/morii/work/github/moriiism/specdcv/conv/conv \
+$sky_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$outdir \
+$outfile_head
+
+
+---------------------------------------
+# x+4
+
+# deconv
+
+data_file=trim_ng/specimage_trim.fits
+resp_file=resp_point_ng_x+4pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+ratio_ele_to_adu=10.0
+nem=1000
+tol_em=1.0e-5
+acc_method=none
+outdir=deconv_ng_x+4pix
+outfile_head=point_ng
+
+/home/morii/work/github/moriiism/specdcv/deconv/deconv \
+$data_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$ratio_ele_to_adu \
+$nem \
+$tol_em \
+$acc_method \
+$outdir \
+$outfile_head
+
+# convolve
+
+sky_file=deconv_ng_x+4pix/point_ng_rec.fits
+resp_file=resp_point_ng_x+4pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+outdir=conv_ng_x+4pix
+outfile_head=deconv_conv
+
+/home/morii/work/github/moriiism/specdcv/conv/conv \
+$sky_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$outdir \
+$outfile_head
+
+
+---------------------------------------
+# x+3
+
+# deconv
+
+data_file=trim_ng/specimage_trim.fits
+resp_file=resp_point_ng_x+3pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+ratio_ele_to_adu=10.0
+nem=1000
+tol_em=1.0e-5
+acc_method=none
+outdir=deconv_ng_x+3pix
+outfile_head=point_ng
+
+/home/morii/work/github/moriiism/specdcv/deconv/deconv \
+$data_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$ratio_ele_to_adu \
+$nem \
+$tol_em \
+$acc_method \
+$outdir \
+$outfile_head
+
+# convolve
+
+sky_file=deconv_ng_x+3pix/point_ng_rec.fits
+resp_file=resp_point_ng_x+3pix/point_ng_resp.fits
+nskyz=291
+nskys=2
+ndetx=31
+ndety=316
+outdir=conv_ng_x+3pix
+outfile_head=deconv_conv
+
+/home/morii/work/github/moriiism/specdcv/conv/conv \
+$sky_file \
+$resp_file \
+$nskyz \
+$nskys \
+$ndetx \
+$ndety \
+$outdir \
+$outfile_head
+
+
+
+
+
+
+
+
+
+
+
+
+

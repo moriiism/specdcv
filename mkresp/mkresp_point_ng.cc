@@ -149,11 +149,20 @@ int main(int argc, char* argv[])
     for(int iskyz = 0; iskyz < nskyz; iskyz++){
         delta_pix_arr[iskyz] = plus_minus_for_delta_pix * (iskyz - iskyz_zero);
     }
-    
+
+    // skyz vs lambda file
+    char skyz_lambda_file[kLineSize];
+    sprintf(skyz_lambda_file, "%s/%s_skyz_lambda.dat",
+            argval->GetOutdir().c_str(),
+            argval->GetOutfileHead().c_str());
+    FILE* fp_skyz_lambda = fopen(skyz_lambda_file, "w");
+    MiIolib::Printf2(fp_skyz_lambda, "# iskyz  delta_pix  lambda  sensi  sensi_err\n");
     for(int iskyz = 0; iskyz < nskyz; iskyz++){
-        printf("%d %e %e %e\n", delta_pix_arr[iskyz], lambda_arr[iskyz],
-               sensi_arr[iskyz], sensi_err_arr[iskyz]);
+        MiIolib::Printf2(fp_skyz_lambda, "%d %d %e %e %e\n",
+                         iskyz, delta_pix_arr[iskyz], lambda_arr[iskyz],
+                         sensi_arr[iskyz], sensi_err_arr[iskyz]);
     }
+    fclose(fp_skyz_lambda);
     
     int nskys = nsrc;
     int nsky = nskyz * nskys;
