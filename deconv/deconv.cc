@@ -38,13 +38,41 @@ int main(int argc, char* argv[])
     argval->Print(fp_log);
     MiIolib::Printf2(fp_log, "-----------------------------\n");    
 
-    int nskyz = argval->GetNskyz();
-    int nskys = argval->GetNskys();
-    int ndetx = argval->GetNdetx();
-    int ndety = argval->GetNdety();
+    // read point src dat
+    string* line_arr = NULL;
+    long nline = 0;
+    MiIolib::GenReadFileSkipComment(argval->GetPointSrcDat(),
+                                    &line_arr,
+                                    &nline);
+    int nsrc = nline;
+
+    // load skyz vs lambda data
+    nline = 0;
+    MiIolib::GenReadFileSkipComment(argval->GetSkyzLambdaFile(),
+                                    &line_arr,
+                                    &nline);
+    double* lambda_arr = new double[nline];
+    for(int iline = 0; iline < nline; iline ++){
+        int nsplit = 0;
+        string* split_arr = NULL;
+        MiStr::GenSplit(line_arr[iline], &nsplit, &split_arr);
+        lambda_arr[iline] = atof(split_arr[2].c_str());
+        delete [] split_arr;
+    }
+    MiIolib::DelReadFile(line_arr);
+    int nskyz = nline;    
+
+    int nskys = nsrc;
+    int ndetx = MifFits::GetAxisSize(argval->GetDataFile(), 0);
+    int ndety = MifFits::GetAxisSize(argval->GetDataFile(), 1);
     int nsky = nskyz * nskys;
     int ndet = ndetx * ndety;
 
+    printf("nskyz = %d\n", nskyz);
+    printf("nskys = %d\n", nskys);
+    printf("ndetx = %d\n", ndetx);
+    printf("ndety = %d\n", ndety);
+    
     // load data
     MifImgInfo* img_info_data = new MifImgInfo;
     img_info_data->InitSetImg(1, 1, ndetx, ndety);
@@ -55,12 +83,13 @@ int main(int argc, char* argv[])
     int nph_data = MirMath::GetSum(ndet, data_arr);
     MiIolib::Printf2(fp_log, "N photon = %d\n", nph_data);
 
-    // add offset for data to be positive.
-    double data_min = MirMath::GetMin(ndet, data_arr);
-    printf("data_min = %e\n", data_min);
+    // fill zero for negative data
     for(int idet = 0; idet < ndet; idet ++){
-        data_arr[idet] -= data_min;
+        if(data_arr[idet] < 0.0){
+            data_arr[idet] = 0.0;
+        }
     }
+
     // adu --> electron
     for(int idet = 0; idet < ndet; idet ++){
         data_arr[idet] *= argval->GetRatioEleToAdu();
@@ -87,6 +116,8 @@ int main(int argc, char* argv[])
     // load response file
     int naxis0 = MifFits::GetAxisSize(argval->GetRespFile(), 0);
     int naxis1 = MifFits::GetAxisSize(argval->GetRespFile(), 1);
+    printf("naxis0(resp) = %d\n", naxis0);
+    printf("naxis1(resp) = %d\n", naxis1);
     if ((naxis0 != ndet) || (naxis1 != nsky)){
         MiIolib::Printf2(fp_log,
                          "Error: response file size error.\n");
@@ -101,29 +132,13 @@ int main(int argc, char* argv[])
                           &bitpix_resp,
                           &resp_mat_arr);
 
-    //// load efficiency file
-    //double* eff_mat_arr = NULL;
-    //int bitpix_eff = 0;
-    //MifImgInfo* img_info_eff = new MifImgInfo;
-    //img_info_eff->InitSetImg(1, 1, nskyx, nskyy);
-    //MifFits::InFitsImageD(argval->GetEffFile(), img_info_eff,
-    //                      &bitpix_eff, &eff_mat_arr);
-
-//    // check
-//    for(int iskyy = 0; iskyy < nskyy; iskyy ++){
-//        for(int iskyx = 0; iskyx < nskyx; iskyx ++){
-//            int isky = nskyx * iskyy + iskyx;
-//            int imat = isky * ndet;            
-//            double resp_sum = 0.0;
-//            for(int idet = 0; idet < ndet; idet ++){
-//                resp_sum += resp_mat_arr[imat + idet];
-//            }
-//            if ( fabs(resp_sum - 1.0) > 1.0e-10){
-//                // printf("warning: resp_sum = %e\n",
-//                // resp_sum);
-//            }
-//        }
-//    }
+    // load efficiency file
+    double* eff_mat_arr = NULL;
+    int bitpix_eff = 0;
+    MifImgInfo* img_info_eff = new MifImgInfo;
+    img_info_eff->InitSetImg(1, 1, nsky, 1);
+    MifFits::InFitsImageD(argval->GetEffFile(), img_info_eff,
+                          &bitpix_eff, &eff_mat_arr);
 
     // sky image to be reconstructed
     double* sky_init_arr = new double[nsky];
@@ -155,10 +170,10 @@ int main(int argc, char* argv[])
     double sum_sky_new = MirMath::GetSum(nsky, sky_new_arr);
     MiIolib::Printf2(fp_log, "sum_sky_new = %e\n", sum_sky_new);
 
-    //// div by eff_arr
-    //for(int isky = 0; isky < nsky; isky ++){
-    //    sky_new_arr[isky] /= eff_mat_arr[isky];
-    //}
+    // div by eff_arr
+    for(int isky = 0; isky < nsky; isky ++){
+        sky_new_arr[isky] /= eff_mat_arr[isky];
+    }
 
     long naxes[2];
     naxes[0] = nskyz;
@@ -170,21 +185,6 @@ int main(int argc, char* argv[])
                            bitpix_out,
                            naxes, sky_new_arr);
 
-    // load skyz vs lambda data
-    long nline = 0;
-    string* line_arr = NULL;
-    MiIolib::GenReadFileSkipComment(argval->GetSkyzLambdaFile(),
-                                    &line_arr,
-                                    &nline);
-    double* lambda_arr = new double[nline];
-    for(int iline = 0; iline < nline; iline ++){
-        int nsplit = 0;
-        string* split_arr = NULL;
-        MiStr::GenSplit(line_arr[iline], &nsplit, &split_arr);
-        lambda_arr[iline] = atof(split_arr[2].c_str());
-        delete [] split_arr;
-    }
-    MiIolib::DelReadFile(line_arr);
     
     // output spectrum to qdp
     char qdpout[kLineSize];
@@ -216,6 +216,26 @@ int main(int argc, char* argv[])
     fprintf(fp_qdp, "la x lambda (um)\n");
     fclose(fp_qdp);
     delete [] lambda_arr;
+
+    // convolve for check
+    // multiply by eff_arr
+    for(int isky = 0; isky < nsky; isky ++){
+        sky_new_arr[isky] *= eff_mat_arr[isky];
+    }
+    // convolved image
+    double* det_arr = new double[ndet];
+    SrtlibRl::GetDetArr(sky_new_arr,
+                        resp_mat_arr,
+                        ndet, nsky,
+                        det_arr);
+    
+    naxes[0] = ndetx;
+    naxes[1] = ndety;
+    MifFits::OutFitsImageD(argval->GetOutdir(),
+                           argval->GetOutfileHead(),
+                           "conv", 2,
+                           bitpix_out,
+                           naxes, det_arr);
     
     double time_ed = MiTime::GetTimeSec();
     MiIolib::Printf2(fp_log,

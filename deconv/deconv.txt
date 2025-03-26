@@ -13,9 +13,9 @@ point_src_dat=point_src.txt
 outdir=resp_point_ng
 outfile_head=point_ng
 
-
 data_file=trim_ng/specimage_trim.fits
 resp_file=resp_point_ng/point_ng_resp.fits
+eff_file=resp_point_ng/point_ng_eff.fits
 skyz_lambda_file=resp_point_ng/point_ng_skyz_lambda.dat
 nskyz=291
 nskys=2
@@ -31,6 +31,7 @@ outfile_head=point_ng
 /home/morii/work/github/moriiism/specdcv/deconv/deconv \
 $data_file \
 $resp_file \
+$eff_file \
 $skyz_lambda_file \
 $nskyz \
 $nskys \
@@ -88,7 +89,7 @@ ds9 trim_ng/specimage_trim.fits \
 
 
 #
-# change gitter
+# change jitter
 #
 
 

@@ -23,12 +23,15 @@ int main(int argc, char* argv[])
 
     int nskyx = MifFits::GetAxisSize(argval->GetInImg(), 0);
     int nskyy = MifFits::GetAxisSize(argval->GetInImg(), 1);
-    printf("nskyx, nxkyy = %d, %d\n", nskyx, nskyy);
+    int nskyz = MifFits::GetAxisSize(argval->GetInImg(), 2);
+    
+    printf("nskyx, nskyy, nskyz = %d, %d, %d\n", nskyx, nskyy, nskyz);
 
+    int iskyz = argval->GetIskyz();
     // load in_img
     double* img_arr = NULL;
     MifImgInfo* img_info = new MifImgInfo;
-    img_info->InitSetCube(1, 1, 1, nskyx, nskyy, 2);
+    img_info->InitSetCube(1, 1, iskyz, nskyx, nskyy, iskyz);
     int bitpix_img = 0;
     MifFits::InFitsCubeD(argval->GetInImg(),
                          img_info,

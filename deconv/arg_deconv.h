@@ -9,12 +9,10 @@ public:
         MiArgBase(),
         progname_(""),
         data_file_(""),
+        point_src_dat_(""),
         resp_file_(""),
+        eff_file_(""),
         skyz_lambda_file_(""),
-        nskyz_(0),
-        nskys_(0),
-        ndetx_(0),
-        ndety_(0),
         ratio_ele_to_adu_(0.0),
         nem_(0),
         tol_em_(0.0),
@@ -29,12 +27,10 @@ public:
 
     string GetProgname() const {return progname_;};
     string GetDataFile() const {return data_file_;};
+    string GetPointSrcDat() const {return point_src_dat_;};
     string GetRespFile() const {return resp_file_;};
+    string GetEffFile() const {return eff_file_;};
     string GetSkyzLambdaFile() const {return skyz_lambda_file_;};
-    int GetNskyz() const {return nskyz_;};    
-    int GetNskys() const {return nskys_;};
-    int GetNdetx() const {return ndetx_;};
-    int GetNdety() const {return ndety_;};
     double GetRatioEleToAdu() const {return ratio_ele_to_adu_;};
     int GetNem() const {return nem_;};
     double GetTolEm() const {return tol_em_;};
@@ -45,12 +41,10 @@ public:
 private:
     string progname_;
     string data_file_;
+    string point_src_dat_;
     string resp_file_;
+    string eff_file_;
     string skyz_lambda_file_;
-    int nskyz_;
-    int nskys_;
-    int ndetx_;
-    int ndety_;
     double ratio_ele_to_adu_;
     int    nem_;
     double tol_em_;

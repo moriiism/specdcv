@@ -18,19 +18,17 @@ void ArgValDeconv::Init(int argc, char* argv[])
     SetOption(argc, argv, long_options);
     
     printf("ArgVal::Init: # of arg = %d\n", argc - optind);
-    int narg = 13;
+    int narg = 11;
     if (argc - optind != narg){
         printf("# of arguments must be %d.\n", narg);
         Usage(stdout);
     }
     int iarg = optind;
     data_file_      = argv[iarg]; iarg++;
+    point_src_dat_  = argv[iarg]; iarg++;
     resp_file_      = argv[iarg]; iarg++;
+    eff_file_       = argv[iarg]; iarg++;
     skyz_lambda_file_ = argv[iarg]; iarg++;
-    nskyz_          = atoi(argv[iarg]); iarg++;    
-    nskys_          = atoi(argv[iarg]); iarg++;
-    ndetx_          = atoi(argv[iarg]); iarg++;
-    ndety_          = atoi(argv[iarg]); iarg++;
     ratio_ele_to_adu_ = atof(argv[iarg]); iarg++;
     nem_            = atoi(argv[iarg]); iarg++;
     tol_em_         = atof(argv[iarg]); iarg++;
@@ -47,12 +45,10 @@ void ArgValDeconv::Print(FILE* fp) const
 
     fprintf(fp, "%s: progname_       : %s\n", __func__, progname_.c_str());
     fprintf(fp, "%s: data_file_      : %s\n", __func__, data_file_.c_str());
+    fprintf(fp, "%s: point_src_dat_  : %s\n", __func__, point_src_dat_.c_str());
     fprintf(fp, "%s: resp_file_      : %s\n", __func__, resp_file_.c_str());
+    fprintf(fp, "%s: eff_file_       : %s\n", __func__, eff_file_.c_str());
     fprintf(fp, "%s: skyz_lambda_file_ : %s\n", __func__, skyz_lambda_file_.c_str());
-    fprintf(fp, "%s: nskyz_          : %d\n", __func__, nskyz_);    
-    fprintf(fp, "%s: nskys_          : %d\n", __func__, nskys_);
-    fprintf(fp, "%s: ndetx_          : %d\n", __func__, ndetx_);
-    fprintf(fp, "%s: ndety_          : %d\n", __func__, ndety_);
     fprintf(fp, "%s: ratio_ele_to_adu_ : %e\n", __func__, ratio_ele_to_adu_);
     fprintf(fp, "%s: nem_            : %d\n", __func__, nem_);
     fprintf(fp, "%s: tol_em_         : %e\n", __func__, tol_em_);
@@ -67,12 +63,10 @@ void ArgValDeconv::Null()
 {
     progname_ = "";
     data_file_ = "";
+    point_src_dat_ = "";
     resp_file_ = "";
+    eff_file_ = "";
     skyz_lambda_file_ = "";
-    nskyz_ = 0;    
-    nskys_ = 0;
-    ndetx_ = 0;
-    ndety_ = 0;
     ratio_ele_to_adu_ = 0.0;
     nem_ = 0;
     tol_em_ = 0.0;
@@ -135,7 +129,7 @@ void ArgValDeconv::Usage(FILE* fp) const
 {
     fprintf(fp,
             "usage: %s [--help (0)] [--verbose (0)] [--debug (0)] "
-            "data_file  resp_file  skyz_lambda_file  nskyz  nskys  ndetx  ndety  ratio_ele_to_adu  "
+            "data_file  point_src_dat  resp_file  eff_file  skyz_lambda_file  ratio_ele_to_adu  "
             "nem  tol_em  acc_method  "
             "outdir  outfile_head \n",
             progname_.c_str());

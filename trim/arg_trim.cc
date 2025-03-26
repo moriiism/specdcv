@@ -18,13 +18,14 @@ void ArgValTrim::Init(int argc, char* argv[])
     SetOption(argc, argv, long_options);
     
     printf("ArgVal::Init: # of arg = %d\n", argc - optind);
-    int narg = 7;
+    int narg = 8;
     if (argc - optind != narg){
         printf("# of arguments must be %d.\n", narg);
         Usage(stdout);
     }
     int iarg = optind;
     in_img_        = argv[iarg]; iarg++;
+    iskyz_         = atoi(argv[iarg]); iarg++;
     x_lo_          = atoi(argv[iarg]); iarg++;
     x_up_          = atoi(argv[iarg]); iarg++;
     y_lo_          = atoi(argv[iarg]); iarg++;
@@ -43,6 +44,8 @@ void ArgValTrim::Print(FILE* fp) const
             __func__, progname_.c_str());
     fprintf(fp, "%s: in_img_        : %s\n",
             __func__, in_img_.c_str());
+    fprintf(fp, "%s: iskyz_         : %d\n",
+            __func__, iskyz_);
     fprintf(fp, "%s: x_lo_        : %d\n",
             __func__, x_lo_);
     fprintf(fp, "%s: x_up_        : %d\n",
@@ -63,6 +66,7 @@ void ArgValTrim::Null()
 {
     progname_   = "";
     in_img_     = "";
+    iskyz_      = 0;
     x_lo_       = 0;
     x_up_       = 0;
     y_lo_       = 0;
@@ -125,7 +129,7 @@ void ArgValTrim::Usage(FILE* fp) const
 {
     fprintf(fp,
             "usage: %s [--help (0)] [--verbose (0)] [--debug (0)] "
-            "in_img  x_lo  x_up  y_lo  y_up  outdir  outfile_head \n",
+            "in_img  iskyz  x_lo  x_up  y_lo  y_up  outdir  outfile_head \n",
             progname_.c_str());
     abort();
 }

@@ -1,0 +1,164 @@
+#
+# for 1100294.1
+#
+
+#
+# for grism data (point)
+#
+
+/c/Users/morii/Documents/docker/volume/ubuntu/akari/data/spectrum_data_250326/\
+AKARI_IRC_1100294_001_reduced/AKARI_IRC_1100294_001/1100294.1/irc_specred_out
+
+
+cd /mnt/volume/akari/ana/specdcv/1100294.1/target1
+
+# PSF image
+ln -s /mnt/volume/akari/data/spectrum_data_250326/AKARI_IRC_1100294_001_reduced/AKARI_IRC_1100294_001/1100294.1/irc_specred_out/1100294.1.N3_NG.refimage_bg.fits
+
+# spec image
+ln -s /mnt/volume/akari/data/spectrum_data_250326/AKARI_IRC_1100294_001_reduced/AKARI_IRC_1100294_001/1100294.1/irc_specred_out/1100294.1.N3_NG.specimage_bg.fits
+
+--> 1100294.1.N3_NG.refimage_bg.fits
+--> 1100294.1.N3_NG.specimage_bg.fits
+
+
+ds9 ~/Documents/docker/volume/ubuntu/akari/data/spectrum_data_250326/AKARI_IRC_1100294_001_reduced/\
+AKARI_IRC_1100294_001/1100294.1/irc_specred_out/1100294.1.N3_NG.refimage_bg.fits \
+~/Documents/docker/volume/ubuntu/akari/data/spectrum_data_250326/AKARI_IRC_1100294_001_reduced/\
+AKARI_IRC_1100294_001/1100294.1/irc_specred_out/1100294.1.N3_NG.specimage_bg.fits &
+
+#### trim for the subimage
+
+mkdir trim_ng
+
+## trim spec image and convert cube to image
+in_img=1100294.1.N3_NG.specimage_bg.fits
+iskyz=2
+x_lo=65
+x_up=90
+y_lo=5
+y_up=300
+outdir=trim_ng
+outfile_head=specimage
+
+/home/morii/work/github/moriiism/specdcv/trim/trim \
+$in_img \
+$iskyz \
+$x_lo \
+$x_up \
+$y_lo \
+$y_up \
+$outdir \
+$outfile_head
+
+# trim refimage and convert cube to image
+in_img=1100294.1.N3_NG.refimage_bg.fits
+iskyz=2
+x_lo=65
+x_up=90
+y_lo=5
+y_up=300
+outdir=trim_ng
+outfile_head=refimage
+
+/home/morii/work/github/moriiism/specdcv/trim/trim \
+$in_img \
+$iskyz \
+$x_lo \
+$x_up \
+$y_lo \
+$y_up \
+$outdir \
+$outfile_head
+
+# trim psf image and convert cube to image
+in_img=1100294.1.N3_NG.refimage_bg.fits
+iskyz=2
+x_lo=420
+x_up=450
+y_lo=130
+y_up=160
+outdir=trim_ng
+outfile_head=refimage_psf
+
+/home/morii/work/github/moriiism/specdcv/trim/trim \
+$in_img \
+$iskyz \
+$x_lo \
+$x_up \
+$y_lo \
+$y_up \
+$outdir \
+$outfile_head
+
+
+
+# spec responese file (NG):
+# 1st. line is dummy.
+# wavelength, sensitivity (ADU/Jy), error of sensitivity (ADU/Jy)
+
+ln -s /mnt/volume/akari/IRC_SPEC_TOOLKIT/IRC_SPEC_TOOLKIT_P12.20181203/ASTRO-F/IRC_SPECRED/CALIBDIR/RESPONSE/response_NG_1st_P2.dat
+
+--> response_NG_1st_P2.dat
+
+# point source positions of trimed image
+cat << EOF > point_src.txt
+# x y
+8 205
+EOF
+
+# mkresp
+# img_ref=trim_ng/refimage_trim.fits
+
+img_spec=trim_ng/specimage_trim.fits
+img_psf=trim_ng/refimage_psf_trim.fits
+spec_resp_dat=response_NG_1st_P2.dat
+point_src_dat=point_src.txt
+plus_minus_for_delta_pix="plus"
+npix_x_jitter=6
+outdir=resp_point_ng
+outfile_head=point_ng
+
+/home/morii/work/github/moriiism/specdcv/mkresp/mkresp_point_ng \
+$img_spec \
+$img_psf \
+$spec_resp_dat \
+$point_src_dat \
+$plus_minus_for_delta_pix \
+$npix_x_jitter \
+$outdir \
+$outfile_head
+
+
+--> /mnt/volume/akari/ana/specdcv/resp_point_ng/point_ng_resp.fits
+
+data_file=trim_ng/specimage_trim.fits
+point_src_dat=point_src.txt
+resp_file=resp_point_ng/point_ng_resp.fits
+eff_file=resp_point_ng/point_ng_eff.fits
+skyz_lambda_file=resp_point_ng/point_ng_skyz_lambda.dat
+ratio_ele_to_adu=10.0
+nem=1000
+tol_em=1.0e-5
+acc_method=none
+outdir=deconv_ng
+outfile_head=point_ng
+
+/home/morii/work/github/moriiism/specdcv/deconv/deconv \
+$data_file \
+$point_src_dat \
+$resp_file \
+$eff_file \
+$skyz_lambda_file \
+$ratio_ele_to_adu \
+$nem \
+$tol_em \
+$acc_method \
+$outdir \
+$outfile_head
+
+
+ds9 trim_ng/specimage_trim.fits deconv_ng/point_ng_conv.fits &
+
+qdp spec_point_ng.qdp
+

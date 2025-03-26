@@ -9,6 +9,7 @@ public:
         MiArgBase(),
         progname_(""),
         in_img_(""),
+        iskyz_(0),
         x_lo_(0),
         x_up_(0),
         y_lo_(0),
@@ -23,6 +24,7 @@ public:
 
     string GetProgname() const {return progname_;};
     string GetInImg() const {return in_img_;};
+    int GetIskyz() const {return iskyz_;};
     int GetXLo() const {return x_lo_;};
     int GetXUp() const {return x_up_;};
     int GetYLo() const {return y_lo_;};
@@ -33,6 +35,7 @@ public:
 private:
     string progname_;
     string in_img_;
+    int iskyz_;
     int x_lo_;
     int x_up_;
     int y_lo_;
